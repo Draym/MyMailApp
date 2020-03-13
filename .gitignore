@@ -29,3 +29,7 @@ build/
 
 ### VS Code ###
 .vscode/
+
+
+### Config ###
+/src/main/resources/smtp_mail.properties
