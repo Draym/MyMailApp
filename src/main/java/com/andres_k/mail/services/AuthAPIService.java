@@ -16,6 +16,14 @@ public class AuthAPIService {
         this.applicationKeyRepository = applicationKeyRepository;
     }
 
+    public Boolean verifyOriginAuthorization(String origin, Application app) {
+        if (origin == null) {
+            return false;
+        }
+        origin = origin.replace("http://", "").replace("https://", "");
+        return app.getBaseUrl() != null && origin.equals(app.getBaseUrl());
+    }
+
     public Application authorize(String apiKey) throws Exception {
         ApplicationKey applicationKey = this.applicationKeyRepository.findByApiKey(apiKey);
         if (applicationKey == null) {

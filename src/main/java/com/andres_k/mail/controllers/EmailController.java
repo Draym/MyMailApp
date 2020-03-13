@@ -27,12 +27,15 @@ public class EmailController {
         this.emailService = emailService;
     }
 
+
     @RequestMapping(value = "/send", method = RequestMethod.POST)
     @ResponseBody
-    public ResponseEntity<?> userContact(HttpServletRequest request, @RequestHeader String ApiKey, @RequestBody MessageCtn message) {
+    public ResponseEntity<?> userContact(@RequestHeader String Origin, @RequestHeader String ApiKey, @RequestBody MessageCtn message) {
         try {
-            String origin = URI.create(request.getRequestURL().toString()).getHost();
             Application app = this.authAPIService.authorize(ApiKey);
+            if (!this.authAPIService.verifyOriginAuthorization(Origin, app)) {
+                return new ResponseEntity<>("API key used by wrong application", HttpStatus.FORBIDDEN);
+            }
             this.emailService.sendEmail(app, message);
             return new ResponseEntity<>(true, HttpStatus.OK);
         } catch (Exception ex) {
@@ -43,11 +46,10 @@ public class EmailController {
 
     @RequestMapping(value = "/toAdmin", method = RequestMethod.POST)
     @ResponseBody
-    public ResponseEntity<?> toAdmin(HttpServletRequest request, @RequestHeader String ApiKey, @RequestBody MessageCtn message) {
+    public ResponseEntity<?> toAdmin(@RequestHeader String Origin, @RequestHeader String ApiKey, @RequestBody MessageCtn message) {
         try {
-            String origin = URI.create(request.getRequestURL().toString()).getHost();
             Application app = this.authAPIService.authorize(ApiKey);
-            if (app.getBaseUrl() == null || origin == null || !origin.equals(app.getBaseUrl())) {
+            if (!this.authAPIService.verifyOriginAuthorization(Origin, app)) {
                 return new ResponseEntity<>("API key used by wrong application", HttpStatus.FORBIDDEN);
             }
             this.emailService.sendToAdmin(app, message);

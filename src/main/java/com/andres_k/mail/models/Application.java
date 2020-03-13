@@ -21,6 +21,12 @@ public class Application {
     @Column(name = "desc_url")
     private String descUrl;
 
+    public void update(Application application) {
+        this.baseUrl = application.baseUrl;
+        this.descUrl = application.descUrl;
+        this.description = application.description;
+    }
+
     public Long getId() {
         return id;
     }

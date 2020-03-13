@@ -1,6 +1,5 @@
 package com.andres_k.mail.services;
 
-import com.andres_k.mail.dao.ApplicationKeyRepository;
 import com.andres_k.mail.dao.ApplicationRepository;
 import com.andres_k.mail.models.Application;
 import com.andres_k.mail.models.ApplicationKey;
@@ -12,12 +11,22 @@ import java.util.List;
 @Service
 public class ApplicationService {
     private final ApplicationRepository applicationRepository;
-    private final ApplicationKeyRepository applicationKeyRepository;
+    private final ApplicationKeyService applicationKeyService;
 
     @Autowired
-    public ApplicationService(ApplicationRepository applicationRepository, ApplicationKeyRepository applicationKeyRepository) {
+    public ApplicationService(ApplicationRepository applicationRepository, ApplicationKeyService applicationKeyService) {
         this.applicationRepository = applicationRepository;
-        this.applicationKeyRepository = applicationKeyRepository;
+        this.applicationKeyService = applicationKeyService;
+    }
+
+    public Application update(Application application) throws Exception {
+        Application old = this.applicationRepository.findById(application.getId()).orElse(null);
+
+        if (old == null) {
+            throw new Exception("There is no application for Id=" + application.getId());
+        }
+        old.update(application);
+        return this.applicationRepository.save(old);
     }
 
     public ApplicationKey register(Application application) throws Exception {
@@ -27,7 +36,7 @@ public class ApplicationService {
         application = this.applicationRepository.save(application);
 
         ApplicationKey applicationKey = new ApplicationKey(application);
-        this.applicationKeyRepository.save(applicationKey);
+        this.applicationKeyService.save(applicationKey);
 
         return applicationKey;
     }
@@ -38,5 +47,9 @@ public class ApplicationService {
 
     public List<Application> getAll() {
         return this.applicationRepository.findAll();
+    }
+
+    public void delete(Long id) {
+        this.applicationRepository.deleteById(id);
     }
 }
