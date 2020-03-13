@@ -9,11 +9,11 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.andres_k</groupId>
-    <artifactId>mail</artifactId>
+    <artifactId>my-mailapp</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <packaging>war</packaging>
+    <packaging>jar</packaging>
     <name>MyMailApp</name>
-    <description>Mail app for draym lab apps</description>
+    <description>Mail app for DraymLab apps</description>
 
     <properties>
         <java.version>1.8</java.version>

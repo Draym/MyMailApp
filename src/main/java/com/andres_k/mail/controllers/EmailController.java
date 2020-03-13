@@ -47,7 +47,7 @@ public class EmailController {
         try {
             String origin = URI.create(request.getRequestURL().toString()).getHost();
             Application app = this.authAPIService.authorize(ApiKey);
-            if (!origin.equals(app.getBaseUrl())) {
+            if (app.getBaseUrl() == null || origin == null || !origin.equals(app.getBaseUrl())) {
                 return new ResponseEntity<>("API key used by wrong application", HttpStatus.FORBIDDEN);
             }
             this.emailService.sendToAdmin(app, message);

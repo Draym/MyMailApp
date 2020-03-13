@@ -21,6 +21,6 @@ public class AuthAPIService {
         if (applicationKey == null) {
             throw new Exception("The API key {" + apiKey + "} is invalid.");
         }
-        return this.applicationRepository.getOne(applicationKey.getApplicationId());
+        return this.applicationRepository.findById(applicationKey.getApplicationId()).orElse(null);
     }
 }
