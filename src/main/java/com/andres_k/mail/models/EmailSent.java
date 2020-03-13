@@ -32,6 +32,9 @@ public class EmailSent {
     @NotNull
     @Column(name = "creation_date")
     private LocalDateTime creationDate;
+    @NotNull
+    @Column(name = "app_id")
+    private Long applicationId;
 
     public EmailSent() {
     }
@@ -108,5 +111,13 @@ public class EmailSent {
 
     public void setCreationDate(LocalDateTime creationDate) {
         this.creationDate = creationDate;
+    }
+
+    public Long getApplicationId() {
+        return applicationId;
+    }
+
+    public void setApplicationId(Long applicationId) {
+        this.applicationId = applicationId;
     }
 }

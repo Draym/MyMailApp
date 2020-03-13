@@ -5,6 +5,7 @@ import com.andres_k.mail.models.http.MessageCtn;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PropertiesLoaderUtils;
+import org.springframework.stereotype.Service;
 
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
@@ -14,9 +15,22 @@ import javax.mail.internet.MimeMultipart;
 import java.io.IOException;
 import java.util.Properties;
 
+@Service
 public class EmailManager {
     private final Properties properties;
     private final Session session;
+
+    public EmailManager() throws IOException {
+        Resource resource = new ClassPathResource("/smtp_mail.properties");
+        this.properties = PropertiesLoaderUtils.loadProperties(resource);
+
+        this.session = Session.getInstance(this.properties, new Authenticator() {
+            @Override
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(properties.getProperty("username"), properties.getProperty("password"));
+            }
+        });
+    }
 
     private void addFooter(StringBuilder body) {
         body.append("<br/>");
@@ -68,29 +82,5 @@ public class EmailManager {
         mail.setContent(multipart);
 
         Transport.send(mail);
-    }
-
-    /**
-     * SINGLETON
-     **/
-    private static EmailManager instance;
-
-    private EmailManager() throws IOException {
-        Resource resource = new ClassPathResource("/smtp.properties");
-        this.properties = PropertiesLoaderUtils.loadProperties(resource);
-
-        this.session = Session.getInstance(this.properties, new Authenticator() {
-            @Override
-            protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication(properties.getProperty("username"), properties.getProperty("password"));
-            }
-        });
-    }
-
-    public static EmailManager get() throws IOException {
-        if (instance == null) {
-            instance = new EmailManager();
-        }
-        return instance;
     }
 }

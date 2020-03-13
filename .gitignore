@@ -31,5 +31,7 @@ build/
 .vscode/
 
 
-### Config ###
+
+### DEV & PROD properties ###
+/src/main/resources/application-prod.properties
 /src/main/resources/smtp_mail.properties
