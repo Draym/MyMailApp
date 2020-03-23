@@ -1,4 +1,4 @@
-# My Mail App
+# My Mail App :e-mail:
 
 Mail application for backend-less websites.
 
