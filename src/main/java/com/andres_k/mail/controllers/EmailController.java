@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 
 @Controller
+@CrossOrigin(origins = "*", allowCredentials = "true")
 @RequestMapping(value = "/email")
 public class EmailController {
     private final AuthAPIService authAPIService;
