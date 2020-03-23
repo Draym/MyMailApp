@@ -11,11 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-import java.net.URI;
 
 @Controller
-@CrossOrigin(origins = "*", allowCredentials = "true")
 @RequestMapping(value = "/email")
 public class EmailController {
     private final AuthAPIService authAPIService;
@@ -30,13 +27,29 @@ public class EmailController {
 
     @RequestMapping(value = "/send", method = RequestMethod.POST)
     @ResponseBody
-    public ResponseEntity<?> userContact(@RequestHeader String Origin, @RequestHeader String ApiKey, @RequestBody MessageCtn message) {
+    public ResponseEntity<?> send(@RequestHeader String Origin, @RequestHeader String ApiKey, @RequestBody MessageCtn message) {
         try {
             Application app = this.authAPIService.authorize(ApiKey);
             if (!this.authAPIService.verifyOriginAuthorization(Origin, app)) {
                 return new ResponseEntity<>("API key used by wrong application", HttpStatus.FORBIDDEN);
             }
             this.emailService.sendEmail(app, message);
+            return new ResponseEntity<>(true, HttpStatus.OK);
+        } catch (Exception ex) {
+            Console.log("[Mail/send]: " + ex.toString());
+            return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @RequestMapping(value = "/sendMessage", method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseEntity<?> sendWithMessage(@RequestHeader String Origin, @RequestHeader String ApiKey, @RequestBody MessageCtn message) {
+        try {
+            Application app = this.authAPIService.authorize(ApiKey);
+            if (!this.authAPIService.verifyOriginAuthorization(Origin, app)) {
+                return new ResponseEntity<>("API key used by wrong application", HttpStatus.FORBIDDEN);
+            }
+            this.emailService.sendWithMessage(app, message);
             return new ResponseEntity<>(true, HttpStatus.OK);
         } catch (Exception ex) {
             Console.log("[Mail/send]: " + ex.toString());

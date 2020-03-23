@@ -25,7 +25,13 @@ public class EmailService {
     }
 
     public void sendEmail(Application app, MessageCtn message) throws MessagingException {
-        EmailSent email  = this.emailManager.send(message);
+        EmailSent email  = this.emailManager.sendMail(message);
+        email.setApplicationId(app.getId());
+        this.emailSentRepository.save(email);
+    }
+
+    public void sendWithMessage(Application app, MessageCtn message) throws MessagingException {
+        EmailSent email  = this.emailManager.sendWithMessage(message);
         email.setApplicationId(app.getId());
         this.emailSentRepository.save(email);
     }

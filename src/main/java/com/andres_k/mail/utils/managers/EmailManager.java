@@ -6,6 +6,7 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PropertiesLoaderUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
@@ -40,7 +41,21 @@ public class EmailManager {
         body.append("Regards, Draymlab.fr");
     }
 
-    public EmailSent send(MessageCtn message) throws MessagingException {
+    private String getFrom(MessageCtn message) {
+        return StringUtils.isEmpty(message.getEmail()) ? this.properties.getProperty("from") : message.getEmail();
+    }
+
+    private String getTo(MessageCtn message) {
+        return StringUtils.isEmpty(message.getTo()) ? this.properties.getProperty("from") : message.getTo();
+    }
+
+    public EmailSent sendMail(MessageCtn message) throws MessagingException {
+        String from = this.getFrom(message);
+        this.send(from, message.getTo(), message.getSubject(), message.getMessage());
+        return new EmailSent(message.getName(), message.getEmail(), from, message.getTo(), message.getSubject(), message.getMessage());
+    }
+
+    public EmailSent sendWithMessage(MessageCtn message) throws MessagingException {
         StringBuilder body = new StringBuilder();
         body.append(message.getName());
         body.append(",");
@@ -48,9 +63,8 @@ public class EmailManager {
         body.append(message.getMessage());
         body.append("<br/>");
         this.addFooter(body);
-
-        this.send(this.properties.getProperty("from"), message.getEmail(), message.getSubject(), body.toString());
-        return new EmailSent(message.getName(), message.getEmail(), this.properties.getProperty("from"), message.getEmail(), message.getSubject(), body.toString());
+        message.setMessage(body.toString());
+        return this.sendMail(message);
     }
 
     public EmailSent sendToAdmin(MessageCtn message) throws MessagingException {
@@ -65,7 +79,7 @@ public class EmailManager {
         return new EmailSent(message.getName(), message.getEmail(), message.getEmail(), this.properties.getProperty("from"), message.getSubject(), body.toString());
     }
 
-    public void send(String from, String to, String subject, String body) throws MessagingException {
+    private void send(String from, String to, String subject, String body) throws MessagingException {
 
         Message mail = new MimeMessage(this.session);
         mail.setFrom(new InternetAddress(from));
