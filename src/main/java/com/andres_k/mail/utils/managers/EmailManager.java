@@ -51,8 +51,9 @@ public class EmailManager {
 
     public EmailSent sendMail(MessageCtn message) throws MessagingException {
         String from = this.getFrom(message);
-        this.send(from, message.getTo(), message.getSubject(), message.getMessage());
-        return new EmailSent(message.getName(), message.getEmail(), from, message.getTo(), message.getSubject(), message.getMessage());
+        String to = this.getTo(message);
+        this.send(from, to, message.getSubject(), message.getMessage());
+        return new EmailSent(message.getName(), from, from, to, message.getSubject(), message.getMessage());
     }
 
     public EmailSent sendWithMessage(MessageCtn message) throws MessagingException {

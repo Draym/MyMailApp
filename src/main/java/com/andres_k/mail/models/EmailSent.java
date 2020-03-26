@@ -27,7 +27,7 @@ public class EmailSent {
     @Column(name = "subject")
     private String subject;
     @NotNull
-    @Column(name = "message")
+    @Column(name = "message", length = 1500)
     private String message;
     @NotNull
     @Column(name = "creation_date")
@@ -40,13 +40,13 @@ public class EmailSent {
     }
 
     public EmailSent(String userName, String userEmail, String from, String to, String subject, String message) {
-        this.userName = userName;
-        this.userEmail = userEmail;
-        this.from = from;
-        this.to = to;
-        this.subject = subject;
-        this.message = message;
-        this.creationDate = LocalDateTime.now();
+        this.setUserName(userName);
+        this.setUserEmail(userEmail);
+        this.setFrom(from);
+        this.setTo(to);
+        this.setSubject(subject);
+        this.setMessage(message);
+        this.setCreationDate(LocalDateTime.now());
     }
 
     public Long getId() {
@@ -102,6 +102,15 @@ public class EmailSent {
     }
 
     public void setMessage(String message) {
+        int size = 255;
+        try {
+            size = getClass().getDeclaredField("message").getAnnotation(Column.class).length();
+        } catch (NoSuchFieldException ignored) {
+        }
+        int inLength = message.length();
+        if (inLength > size) {
+            message = message.substring(0, size);
+        }
         this.message = message;
     }
 
