@@ -168,8 +168,9 @@ The default path to setup the mails on your website should be as follow :
     "message": String,
     }
     return = true/false
+    ```
     
-    
+    ```javascript
     POST: /api/email/toAdmin
     ---> use to receive an email from a user (ex: contact page)
     {
