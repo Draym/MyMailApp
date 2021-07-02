@@ -8,12 +8,37 @@
         <version>2.2.4.RELEASE</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
+
     <groupId>com.andres_k</groupId>
     <artifactId>my-mailapp</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
-    <packaging>jar</packaging>
+    <version>1.0.0-SNAPSHOT</version>
+
     <name>MyMailApp</name>
     <description>Mail app for DraymLab apps</description>
+
+    <licenses>
+        <license>
+            <name>MIT</name>
+            <url>https://github.com/Draym/MyMailApp/blob/master/LICENSE</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+    <developers>
+        <developer>
+            <id>Draym</id>
+            <name>Kevin Andres</name>
+            <url>http://www.kevinandres.com</url>
+        </developer>
+    </developers>
+
+    <issueManagement>
+        <system>Github</system>
+        <url>https://github.com/Draym/MyMailApp/issues</url>
+    </issueManagement>
+
+    <inceptionYear>2020</inceptionYear>
+
+    <packaging>jar</packaging>
 
     <properties>
         <java.version>1.8</java.version>
